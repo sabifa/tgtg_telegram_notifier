@@ -29,9 +29,6 @@ except:
 
 try:
     # Create the tgtg client with my credentials
-    print(config['tgtg']['access_token'])
-    print(config['tgtg']['refresh_token'])
-    print(config['tgtg']['user_id'])
     tgtg_client = TgtgClient(access_token=config['tgtg']['access_token'], refresh_token=config['tgtg']
                              ['refresh_token'], user_id=config['tgtg']['user_id'], cookie=config['tgtg']['cookie'])
 except KeyError:
@@ -67,20 +64,21 @@ except:
     exit(1)
 
 try:
-    bot_chatID = str(config['telegram']["bot_chatID"])
-    if bot_chatID == "0":
+    bot_chatIDs = list(config['telegram']["bot_chatIDs"])
+    if bot_chatIDs == []:
         # Get chat ID
         pin = ''.join(random.choice(string.digits) for x in range(6))
         print("Please type \"" + pin + "\" to the bot.")
-        while bot_chatID == "0":
+        while bot_chatIDs == []:
             response = requests.get(
                 'https://api.telegram.org/bot' + bot_token + '/getUpdates?limit=1&offset=-1')
             # print(response.json())
             if (response.json()['result'][0]['message']['text'] == pin):
-                bot_chatID = str(
+                chatId = str(
                     response.json()['result'][0]['message']['chat']['id'])
-                print("Your chat id:" + bot_chatID)
-                config['telegram']['bot_chatID'] = int(bot_chatID)
+                print("Your chat id:" + chatId)
+                bot_chatIDs = [chatId]
+                config['telegram']['bot_chatIDs'] = [chatId]
                 f.seek(0)
                 json.dump(config, f, indent=4)
                 f.truncate()
@@ -108,9 +106,11 @@ def telegram_bot_sendtext(bot_message, only_to_admin=True):
     It can be specified if both users or only the admin receives the message
     Follow this article to figure out a specific chatID: https://medium.com/@ManHay_Hong/how-to-create-a-telegram-bot-and-send-messages-with-python-4cf314d9fa3e
     """
-    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + \
-        bot_chatID + '&parse_mode=Markdown&text=' + quote(bot_message)
-    response = requests.get(send_text)
+    for chatId in bot_chatIDs:
+        send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + \
+        chatId + '&parse_mode=Markdown&text=' + quote(bot_message)
+        response = requests.get(send_text)
+
     return response.json()
 
 
@@ -119,22 +119,25 @@ def telegram_bot_sendimage(image_url, image_caption=None, button_links=None):
     For sending an image in Telegram, that can also be accompanied by an image caption
     """
     # Prepare the url for an telegram API call to send a photo
-    send_text = 'https://api.telegram.org/bot' + bot_token + \
-        '/sendPhoto?chat_id=' + bot_chatID + '&photo=' + image_url
 
-    if button_links != None:
-        button_links_text = '{"inline_keyboard":[['
-        for item in button_links:
-            button_links_text += '{"text":"' + \
-                item['text'] + '","url":"' + item['url'] + '"}'
-        button_links_text += ']]}'
-        send_text += '&reply_markup=' + quote(button_links_text)
+    for chatId in bot_chatIDs:
+        send_text = 'https://api.telegram.org/bot' + bot_token + \
+        '/sendPhoto?chat_id=' + chatId + '&photo=' + image_url
 
-    # If the argument gets passed, at a caption to the image
-    if image_caption != None:
-        send_text += '&parse_mode=Markdown&caption=' + quote(image_caption)
+        if button_links != None:
+            button_links_text = '{"inline_keyboard":[['
+            for item in button_links:
+                button_links_text += '{"text":"' + \
+                    item['text'] + '","url":"' + item['url'] + '"}'
+            button_links_text += ']]}'
+            send_text += '&reply_markup=' + quote(button_links_text)
 
-    response = requests.get(send_text)
+        # If the argument gets passed, at a caption to the image
+        if image_caption != None:
+            send_text += '&parse_mode=Markdown&caption=' + quote(image_caption)
+
+        response = requests.get(send_text)
+
     return response.json()
 
 
@@ -142,10 +145,11 @@ def telegram_bot_delete_message(message_id):
     """
     For deleting a Telegram message
     """
-    send_text = 'https://api.telegram.org/bot' + bot_token + \
-        '/deleteMessage?chat_id=' + bot_chatID + \
-        '&message_id=' + str(message_id)
-    response = requests.get(send_text)
+    for chatId in bot_chatIDs:
+        send_text = 'https://api.telegram.org/bot' + bot_token + \
+            '/deleteMessage?chat_id=' + chatId + \
+            '&message_id=' + str(message_id)
+        response = requests.get(send_text)
     return response.json()
 
 

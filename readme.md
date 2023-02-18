@@ -1,14 +1,16 @@
-# am_bot
-## Bot for [Too good to go](https://toogoodtogo.com) and [Foodsi](https://www.foodsi.pl/)
-### Problem
-This project helps me to no longer miss my favorite offers at [Too good to go](https://toogoodtogo.com) and [Foodsi](https://www.foodsi.pl/).
+# tgtg_telegram_notifier
+## Bot for [Too good to go](https://toogoodtogo.com)
+Forked from: https://github.com/kacpi2442/am_bot
 
-"Too good to go" and "Foodsi" are platforms, where stores can offer bags of leftover food, that they otherwise need to throw away. The stores save a little bit of money, we get goods, that already have a few quirks, but are still consumable. Most importantly, this reduces food waste and thereby is good for the planet. In my neighborhood, e.g. a supermarket offers fruits & vegetables and a bakery offer their leftover bread at the end of the day.
+Changes:
+- Only TGTG support
+- uses inline_keyboard parameter for fancy telegram buttons
+- only queries favorite shops
+- uses german datetime format
+- adds shop address to message
+- allows to provide multiple chat ids for telegram bot (to send to multiple clients)
 
-However, the Too good to go and Foodsi apps does often not notify me in time when my favorite goods are in stock. Since the offers are popular and limited, I regularly miss the time to click and collect the items. There are no settings for notifications in the apps.
-
-### Solution
-This application scrapes info from the Too good to go and Foodsi and sends me a notification via a Telegram bot as soon as some items in my area are available.
+## Solution
 Here is a screenshot:
 ![Telegram Screenshot](/result_screenshot.png "Telegram bot with notifications")
 
@@ -25,8 +27,6 @@ I used Telegram as the service to notify me, because they are quite supportive f
 ```cp config.example.json config.json```
 #### Edit config file:
 - Insert your bot token (you can get it from [@BotFather](https://t.me/BotFather))
-- Insert your location info (i use [latlong.net](https://www.latlong.net/))
-- Insert notification range (in kilometers)
 #### Run the script:
 ```python3  watch_script.py```
 
