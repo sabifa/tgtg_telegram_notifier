@@ -285,7 +285,7 @@ def toogoodtogo():
                     print(traceback.format_exc())
             else:
                 # Prepare a generic string, but with the important info
-                message = f"There was a change of number of goodie bags in stock from {old_stock} to {new_stock} at {item['store_name']}."
+                message = f"Die Anzahl der vorrätigen Magic Bags änderte sich von {old_stock} auf {new_stock} bei [{item['store_name']}](https://share.toogoodtogo.com/item/{item['id']})."
                 telegram_bot_sendtext(message)
 
     # Reset the global information with the newest fetch
