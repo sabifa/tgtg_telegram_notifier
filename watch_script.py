@@ -248,7 +248,7 @@ def toogoodtogo():
                 if 'pickup_start' and 'pickup_end' in item:
                     # message += f"⏰ {item['pickup_start']} - {item['pickup_end']}\n"
                     message += f"⏰ {item['pickup_start']} - {item['pickup_end']}\n"
-                message += f"📍  [{item['store']['store_location']['address']['address_line']}](https://maps.google.com/?q={item['store']['store_location']['location']['longitude']},{item['store']['store_location']['location']['latitude']})\n"
+                message += f"📍  [{item['store']['store_location']['address']['address_line']}](https://maps.google.com/?q={item['store']['store_location']['location']['latitude']},{item['store']['store_location']['location']['longitude']})\n"
                 # message += f"ℹ️ [Jetzt reservieren](https://share.toogoodtogo.com/item/{item['id']})"
 
                 button_links = [
