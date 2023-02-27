@@ -37,7 +37,7 @@ I used Telegram as the service to notify me, because they are quite supportive f
 
 with docker (make sure to rebuild after changing config.json):
 - sudo docker build -t tgtg_notifier .
-- sudo docker run -e PYTHONUNBUFFERED=1 tgtg_notifier
+- sudo docker run --restart unless-stopped -e PYTHONUNBUFFERED=1 -v /etc/localtime:/etc/localtime tgtg_notifier
 
 later to attach to running container and view logs:
 - docker container logs CONTAINER -f

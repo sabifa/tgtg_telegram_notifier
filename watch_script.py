@@ -180,9 +180,9 @@ def parse_tgtg_api(api_result):
 
         try:
             localPickupStart = datetime.datetime.strptime(
-                store['pickup_interval']['start'], '%Y-%m-%dT%H:%M:%S%z').replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
+                store['pickup_interval']['start'], '%Y-%m-%dT%H:%M:%S%z').replace(tzinfo=datetime.timezone.utc).astimezone()
             localPickupEnd = datetime.datetime.strptime(
-                store['pickup_interval']['end'], '%Y-%m-%dT%H:%M:%S%z').replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
+                store['pickup_interval']['end'], '%Y-%m-%dT%H:%M:%S%z').replace(tzinfo=datetime.timezone.utc).astimezone()
             current_item['pickup_start'] = maya.parse(localPickupStart).slang_date(locale="de"
             ).capitalize() + " " + localPickupStart.strftime('%H:%M')
             current_item['pickup_end'] = maya.parse(localPickupEnd).slang_date(locale="de"
