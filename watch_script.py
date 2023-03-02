@@ -106,10 +106,15 @@ def telegram_bot_sendtext(bot_message, only_to_admin=True):
     It can be specified if both users or only the admin receives the message
     Follow this article to figure out a specific chatID: https://medium.com/@ManHay_Hong/how-to-create-a-telegram-bot-and-send-messages-with-python-4cf314d9fa3e
     """
-    for chatId in bot_chatIDs:
+    if only_to_admin == True:
         send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + \
-        chatId + '&parse_mode=Markdown&text=' + quote(bot_message)
+            bot_chatIDs[0] + '&parse_mode=Markdown&text=' + quote(bot_message)
         response = requests.get(send_text)
+    else:
+        for chatId in bot_chatIDs:
+            send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + \
+                chatId + '&parse_mode=Markdown&text=' + quote(bot_message)
+            response = requests.get(send_text)
 
     return response.json()
 
@@ -272,10 +277,10 @@ def toogoodtogo():
                 pass
                 # Prepare a generic string, but with the important info
                 # message = f" 📉 Decrease from {old_stock} to {new_stock} available goodie bags at {[item['store_name'] for item in new_api_result if item['item_id'] == item_id][0]}."
-                # telegram_bot_sendtext(message)
+                # telegram_bot_sendtext(message, False)
             elif old_stock > new_stock and new_stock == 0:
                 # message = f" ⭕ Sold out! There are no more goodie bags available at {item['store_name']}."
-                # telegram_bot_sendtext(message)
+                # telegram_bot_sendtext(message, False)
                 try:
                     tg = telegram_bot_delete_message(
                         [stock['msg_id'] for stock in tgtg_in_stock if stock['id'] == item['id']][0])
@@ -286,7 +291,7 @@ def toogoodtogo():
             else:
                 # Prepare a generic string, but with the important info
                 message = f"Die Anzahl der vorrätigen Magic Bags änderte sich von {old_stock} auf {new_stock} bei [{item['store_name']}](https://share.toogoodtogo.com/item/{item['id']})."
-                telegram_bot_sendtext(message)
+                telegram_bot_sendtext(message, False)
 
     # Reset the global information with the newest fetch
     tgtg_in_stock = parsed_api
@@ -323,8 +328,7 @@ schedule.every(1).minutes.do(refresh)
 schedule.every(24).hours.do(still_alive)
 
 # Description of the service, that gets send once
-telegram_bot_sendtext(
-    "The bot script has started successfully. The bot checks every 1 minute, if there is something new at TooGoodToGo. Every 24 hours, the bots sends a \"still alive\" message.")
+telegram_bot_sendtext("The bot script has started successfully. The bot checks every 1 minute, if there is something new at TooGoodToGo. Every 24 hours, the bots sends a \"still alive\" message.")
 refresh()
 while True:
     # run_pending
