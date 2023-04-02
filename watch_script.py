@@ -106,7 +106,7 @@ def telegram_bot_sendtext(bot_message, only_to_admin=True):
     It can be specified if both users or only the admin receives the message
     Follow this article to figure out a specific chatID: https://medium.com/@ManHay_Hong/how-to-create-a-telegram-bot-and-send-messages-with-python-4cf314d9fa3e
     """
-    if only_to_admin == True:
+    if only_to_admin is True:
         send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + \
             bot_chatIDs[0] + '&parse_mode=Markdown&text=' + quote(bot_message)
         response = requests.get(send_text)
