@@ -279,15 +279,15 @@ def toogoodtogo():
                 # message = f" 📉 Decrease from {old_stock} to {new_stock} available goodie bags at {[item['store_name'] for item in new_api_result if item['item_id'] == item_id][0]}."
                 # telegram_bot_sendtext(message, False)
             elif old_stock > new_stock and new_stock == 0:
-                # message = f" ⭕ Sold out! There are no more goodie bags available at {item['store_name']}."
+                print(f" ⭕ Sold out! There are no more goodie bags available at {item['store_name']}.")
                 # telegram_bot_sendtext(message, False)
-                try:
-                    tg = telegram_bot_delete_message(
-                        [stock['msg_id'] for stock in tgtg_in_stock if stock['id'] == item['id']][0])
-                except:
-                    print(
-                        f"Failed to remove message for item id: {item['id']}")
-                    print(traceback.format_exc())
+                # try:
+                #     tg = telegram_bot_delete_message(
+                #         [stock['msg_id'] for stock in tgtg_in_stock if stock['id'] == item['id']][0])
+                # except:
+                #     print(
+                #         f"Failed to remove message for item id: {item['id']}")
+                #     print(traceback.format_exc())
             else:
                 # Prepare a generic string, but with the important info
                 message = f"Die Anzahl der vorrätigen Magic Bags änderte sich von {old_stock} auf {new_stock} bei [{item['store_name']}](https://share.toogoodtogo.com/item/{item['id']})."
